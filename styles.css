@@ -57,8 +57,12 @@ header {
   display: grid;
   place-items: center;
   color: #fff;
-  font-weight: 800;
-  font-size: 16px;
+  box-shadow: 0 10px 22px rgba(0, 109, 176, 0.28);
+}
+
+.brand-icon {
+  width: 22px;
+  height: 22px;
 }
 
 .brand-text {
@@ -213,6 +217,7 @@ button.link {
   overflow: hidden;
   background: #fff;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+  align-items: center;
 }
 
 @media (max-width: 640px) {
@@ -259,6 +264,10 @@ button.link {
 
 .tile-body {
   padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
 }
 
 .tile-body label {

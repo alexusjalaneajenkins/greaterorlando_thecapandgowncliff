@@ -221,9 +221,9 @@ const questionCard = (q) => {
 const renderIntro = () => {
   appRoot.innerHTML = `
     <div class="center">
-      <div style="width:96px;height:96px;border-radius:999px;background:#e5f2fb;border:1px solid #d5e7f5;display:grid;place-items:center;margin:0 auto 12px;">
-        <i data-lucide="map-pin" style="width:46px;height:46px;color:var(--blue);"></i>
-      </div>
+            <div style="width:96px;height:96px;border-radius:999px;background:#e5f2fb;border:1px solid #d5e7f5;display:grid;place-items:center;margin:0 auto 12px;">
+              <i data-lucide="graduation-cap" style="width:46px;height:46px;color:var(--blue);"></i>
+            </div>
       <h1>The Cap and Gown Cliff</h1>
       <div class="badge-line"><span style="width:10px;height:10px;border-radius:999px;background:var(--blue);"></span> Orlando Case Study</div>
       <h2 style="color: var(--gray-700); margin-top: 12px;">Defining the Structural Failure Leading from Higher Education to Homelessness.</h2>
