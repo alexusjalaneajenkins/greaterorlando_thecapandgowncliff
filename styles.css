@@ -217,7 +217,7 @@ button.link {
   overflow: hidden;
   background: #fff;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
-  align-items: center;
+  align-items: stretch;
 }
 
 @media (max-width: 640px) {
@@ -229,8 +229,10 @@ button.link {
 .tile-illustration {
   position: relative;
   min-height: 140px;
-  display: grid;
-  place-items: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 12px;
   border-right: 1px solid var(--gray-200);
 }
@@ -268,6 +270,7 @@ button.link {
   flex-direction: column;
   gap: 12px;
   justify-content: center;
+  height: 100%;
 }
 
 .tile-body label {
