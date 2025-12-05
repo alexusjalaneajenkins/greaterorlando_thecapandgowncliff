@@ -353,6 +353,141 @@ button.full:disabled {
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
 }
 
+.thank-you {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.success-icon {
+  width: 84px;
+  height: 84px;
+  border-radius: 999px;
+  background: #dcfce7;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 4px;
+  color: #15803d;
+}
+
+.success-icon i {
+  width: 40px;
+  height: 40px;
+}
+
+.impact-card {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.impact-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.impact-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--gray-900);
+  letter-spacing: 0.01em;
+}
+
+.impact-label i {
+  width: 18px;
+  height: 18px;
+  color: var(--blue);
+}
+
+.impact-subtitle {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
+.analysis-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 680px) {
+  .analysis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.analysis-card {
+  border: 1px solid var(--gray-200);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: left;
+}
+
+.analysis-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 12px 30px rgba(0, 109, 176, 0.12);
+  transform: translateY(-2px);
+}
+
+.analysis-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+.analysis-icon i {
+  width: 24px;
+  height: 24px;
+}
+
+.analysis-icon.narrative {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.analysis-icon.systemic {
+  background: #f3e8ff;
+  color: #7c3aed;
+}
+
+.analysis-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analysis-title {
+  font-weight: 800;
+  color: var(--gray-900);
+}
+
+.analysis-desc {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: 14px;
+}
+
+.restart-button {
+  margin-top: 18px;
+  padding-inline: 22px;
+  gap: 8px;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
