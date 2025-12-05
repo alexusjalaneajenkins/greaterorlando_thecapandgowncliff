@@ -22,6 +22,10 @@ const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'defaul
 const apiKey = typeof window.__gemini_api_key !== 'undefined' ? window.__gemini_api_key : '';
 const MODEL_NAME = 'gemini-1.5-flash-001';
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
+const GEMINI_HEADERS = {
+  'Content-Type': 'application/json',
+  'x-goog-api-key': apiKey,
+};
 
 const ILLUSTRATIONS = {
   balance: { icon: 'scale', label: 'Wages vs. rent', accent: '#005b99', backdrop: 'linear-gradient(135deg,#ebf5ff, #ffffff 40%, #dcebff)' },
@@ -505,11 +509,14 @@ async function callGemini(prompt, { timeoutMs = 15000 } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
+  const endpointWithKey = `${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`;
+  const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
+
   try {
-    const response = await fetch(`${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`, {
+    const response = await fetch(endpointWithKey, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      headers: GEMINI_HEADERS,
+      body: JSON.stringify(requestBody),
       signal: controller.signal,
     });
 
@@ -525,6 +532,9 @@ async function callGemini(prompt, { timeoutMs = 15000 } = {}) {
   } catch (error) {
     const isAbort = error?.name === 'AbortError';
     console.error('Gemini API Error:', isAbort ? 'Request timed out' : error);
+    if (!isAbort && error?.message?.includes('404')) {
+      console.error('Gemini endpoint returned 404. Double-check API enablement and that the key allows the Generative Language API');
+    }
     return 'Service temporarily unavailable. Please try again later.';
   } finally {
     clearTimeout(timer);
