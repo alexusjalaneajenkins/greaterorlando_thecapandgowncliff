@@ -259,16 +259,16 @@ const renderScreener = () => {
       <h2 class="center" style="margin-top:8px;">Which path best describes your reality?</h2>
       <div class="grid two" style="margin-top:18px;">
         ${options
-          .map(
-            (o) => `
-              <button class="card option" data-path="${o.id}" style="text-align:left;">
-                <div class="option-icon"><i data-lucide="${o.icon}" style="width:22px;height:22px;"></i></div>
-                <div>
-                  <div style="font-weight:800;color:var(--gray-900);">${o.title}</div>
-                  <div style="color:var(--gray-600);font-size:14px;">${o.desc}</div>
-                </div>
-              </button>`
-          )
+                .map(
+                  (o) => `
+                    <button class="card option option-card" data-path="${o.id}" style="text-align:left;">
+                      <div class="option-icon"><i data-lucide="${o.icon}" style="width:22px;height:22px;"></i></div>
+                      <div>
+                        <div style="font-weight:800;color:var(--gray-900);font-size:17px;">${o.title}</div>
+                        <div style="color:var(--gray-600);font-size:15px;">${o.desc}</div>
+                      </div>
+                    </button>`
+                )
           .join('')}
       </div>
     </div>
