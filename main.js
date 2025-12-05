@@ -1,4 +1,4 @@
-// Version 2.1 - Fixed Gemini Model URL
+// Version 2.2 - Handle Gemini host validation + stable model alias
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js';
 import { getAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js';
 import { addDoc, collection, getFirestore, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js';
@@ -20,6 +20,12 @@ const auth = firebaseReady ? getAuth(app) : null;
 const db = firebaseReady ? getFirestore(app) : null;
 const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id';
 const apiKey = typeof window.__gemini_api_key !== 'undefined' ? window.__gemini_api_key : '';
+const MODEL_NAME = 'gemini-1.5-flash-latest';
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
+const GEMINI_HEADERS = {
+  'Content-Type': 'application/json',
+  'x-goog-api-key': apiKey,
+};
 
 const ILLUSTRATIONS = {
   balance: { icon: 'scale', label: 'Wages vs. rent', accent: '#005b99', backdrop: 'linear-gradient(135deg,#ebf5ff, #ffffff 40%, #dcebff)' },
@@ -494,23 +500,61 @@ async function submitFinal() {
   render();
 }
 
-async function callGemini(prompt) {
-  try {
-    const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent?key=${apiKey}`,      
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-      },
-    );
+const formatGeminiError = (error) => {
+  const message = error?.message || '';
+  if (message.includes('host is not supported') || message.includes('not in whitelist')) {
+    return 'The API key is restricted to a different domain. Add this site to the key\'s allowed HTTP referrers.';
+  }
+  if (message.includes('model') && message.includes('not found')) {
+    return 'The selected Gemini model is not available for this API version. Try the latest stable alias.';
+  }
+  return null;
+};
 
-    if (!response.ok) throw new Error(response.statusText);
-    const data = await response.json();
+async function callGemini(prompt, { timeoutMs = 15000 } = {}) {
+  if (!apiKey) {
+    console.error('Gemini API Error: Missing API key');
+    return 'Gemini service is not configured.';
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  const endpointWithKey = `${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`;
+  const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
+
+  try {
+    const response = await fetch(endpointWithKey, {
+      method: 'POST',
+      headers: GEMINI_HEADERS,
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+
+    const rawText = await response.text();
+    let data = {};
+    try {
+      data = rawText ? JSON.parse(rawText) : {};
+    } catch (parseErr) {
+      console.error('Gemini API Error: Failed to parse response JSON', parseErr, rawText);
+    }
+
+    if (!response.ok) {
+      const message = data?.error?.message || response.statusText || 'Unknown error';
+      throw new Error(`${response.status}: ${message}`);
+    }
+
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Unable to generate analysis at this time.';
   } catch (error) {
-    console.error('Gemini API Error:', error);
-    return 'Service temporarily unavailable. Please try again later.';
+    const isAbort = error?.name === 'AbortError';
+    const formatted = formatGeminiError(error);
+    console.error('Gemini API Error:', isAbort ? 'Request timed out' : error);
+    if (!isAbort && error?.message?.includes('404')) {
+      console.error('Gemini endpoint returned 404. Verify API enablement, correct model name, and that the key allows the Generative Language API');
+    }
+    return formatted || 'Service temporarily unavailable. Please try again later.';
+  } finally {
+    clearTimeout(timer);
   }
 }
 
