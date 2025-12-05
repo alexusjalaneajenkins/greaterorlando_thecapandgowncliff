@@ -20,6 +20,12 @@ const auth = firebaseReady ? getAuth(app) : null;
 const db = firebaseReady ? getFirestore(app) : null;
 const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'default-app-id';
 const apiKey = typeof window.__gemini_api_key !== 'undefined' ? window.__gemini_api_key : '';
+const MODEL_NAME = 'gemini-1.5-flash-001';
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent`;
+const GEMINI_HEADERS = {
+  'Content-Type': 'application/json',
+  'x-goog-api-key': apiKey,
+};
 
 const ILLUSTRATIONS = {
   balance: { icon: 'scale', label: 'Wages vs. rent', accent: '#005b99', backdrop: 'linear-gradient(135deg,#ebf5ff, #ffffff 40%, #dcebff)' },
@@ -494,23 +500,44 @@ async function submitFinal() {
   render();
 }
 
-async function callGemini(prompt) {
-  try {
-    const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent?key=${apiKey}`,      
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-      },
-    );
+async function callGemini(prompt, { timeoutMs = 15000 } = {}) {
+  if (!apiKey) {
+    console.error('Gemini API Error: Missing API key');
+    return 'Gemini service is not configured.';
+  }
 
-    if (!response.ok) throw new Error(response.statusText);
-    const data = await response.json();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  const endpointWithKey = `${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`;
+  const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
+
+  try {
+    const response = await fetch(endpointWithKey, {
+      method: 'POST',
+      headers: GEMINI_HEADERS,
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+
+    const rawText = await response.text();
+    const data = rawText ? JSON.parse(rawText) : {};
+
+    if (!response.ok) {
+      const message = data?.error?.message || response.statusText || 'Unknown error';
+      throw new Error(`${response.status}: ${message}`);
+    }
+
     return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Unable to generate analysis at this time.';
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    const isAbort = error?.name === 'AbortError';
+    console.error('Gemini API Error:', isAbort ? 'Request timed out' : error);
+    if (!isAbort && error?.message?.includes('404')) {
+      console.error('Gemini endpoint returned 404. Double-check API enablement and that the key allows the Generative Language API');
+    }
     return 'Service temporarily unavailable. Please try again later.';
+  } finally {
+    clearTimeout(timer);
   }
 }
 
