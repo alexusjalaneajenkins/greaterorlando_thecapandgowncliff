@@ -21,7 +21,7 @@ const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'defaul
 const apiKey = typeof window.__gemini_api_key !== 'undefined' ? window.__gemini_api_key : '';
 
 const ILLUSTRATIONS = {
-  balance: { icon: 'balance', label: 'Wages vs. rent', accent: '#005b99', backdrop: 'linear-gradient(135deg,#ebf5ff, #ffffff 40%, #dcebff)' },
+  balance: { icon: 'scale', label: 'Wages vs. rent', accent: '#005b99', backdrop: 'linear-gradient(135deg,#ebf5ff, #ffffff 40%, #dcebff)' },
   diploma_dust: { icon: 'scroll-text', label: 'Degree payoff', accent: '#7c3aed', backdrop: 'linear-gradient(135deg,#f3e8ff, #ffffff 40%, #e9d5ff)' },
   cliff: { icon: 'mountain', label: 'Support cliff', accent: '#e85d04', backdrop: 'linear-gradient(135deg,#fff3e0, #ffffff 40%, #ffe0b2)' },
   breakdown: { icon: 'car', label: 'Unexpected bill', accent: '#b91c1c', backdrop: 'linear-gradient(135deg,#fef2f2, #ffffff 40%, #fee2e2)' },
@@ -31,7 +31,7 @@ const ILLUSTRATIONS = {
   storm: { icon: 'cloud-lightning', label: 'Job market anxiety', accent: '#0ea5e9', backdrop: 'linear-gradient(135deg,#e0f7ff, #ffffff 40%, #bae6fd)' },
   torn_net: { icon: 'shield-off', label: 'No safety net', accent: '#c026d3', backdrop: 'linear-gradient(135deg,#f5e1ff, #ffffff 40%, #e9d5ff)' },
   backpack: { icon: 'backpack', label: 'Family load', accent: '#065f46', backdrop: 'linear-gradient(135deg,#ecfdf3, #ffffff 40%, #d1fae5)' },
-  hurdle: { icon: 'fence', label: 'Accommodations blocked', accent: '#ea580c', backdrop: 'linear-gradient(135deg,#fff7ed, #ffffff 40%, #ffead5)' },
+  hurdle: { icon: 'fence', label: 'Access blocked', accent: '#ea580c', backdrop: 'linear-gradient(135deg,#fff7ed, #ffffff 40%, #ffead5)' },
   heavy_heart: { icon: 'heart-crack', label: 'Guilt + duty', accent: '#be123c', backdrop: 'linear-gradient(135deg,#fef2f2, #ffffff 40%, #ffe4e6)' },
   couch: { icon: 'sofa', label: 'Shared housing', accent: '#1e40af', backdrop: 'linear-gradient(135deg,#e0ecff, #ffffff 40%, #dbeafe)' },
   piggy_bank: { icon: 'piggy-bank', label: 'Emergency cash', accent: '#15803d', backdrop: 'linear-gradient(135deg,#ecfdf3, #ffffff 40%, #dcfce7)' },
