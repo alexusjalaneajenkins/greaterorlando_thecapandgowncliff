@@ -398,32 +398,44 @@ const renderSubmitting = () => {
 
 const renderDone = () => {
   appRoot.innerHTML = `
-    <div class="center" style="max-width:720px;margin:0 auto;">
-      <div style="width:72px;height:72px;border-radius:999px;background:#dcfce7;display:grid;place-items:center;margin:0 auto 12px;">
-        <i data-lucide="check-circle" style="width:36px;height:36px;color:#15803d;"></i>
+    <div class="center thank-you" style="max-width:760px;margin:0 auto;">
+      <div class="success-icon">
+        <i data-lucide="check-circle"></i>
       </div>
       <h2>Response Recorded.</h2>
       <p class="lead">Your data has been added to the study. Thank you for helping us make the invisible visible.</p>
-      <div class="done-card" style="text-align:left;">
-        <div class="pill"><i data-lucide="sparkles" style="width:16px;height:16px;"></i> Powered by Gemini AI</div>
-        <h3 style="margin:16px 0 8px;">Analyze Your Impact</h3>
-        <p style="color:var(--gray-600);font-size:14px;">Use AI to instantly see how your personal story connects to the broader structural failure in Orlando.</p>
-        <div class="grid two" style="margin:16px 0;gap:12px;">
-          <button class="card option" id="btn-narrative" style="text-align:left;">
-            <div class="option-icon" style="background:#eef2ff;color:#4338ca;"><i data-lucide="book-open" style="width:18px;height:18px;"></i></div>
-            <div>
-              <div style="font-weight:800;color:#312e81;">The Narrative Mirror</div>
-              <div style="color:#4338ca;font-size:13px;">Synthesize my answers into a cohesive, anonymous user story.</div>
+
+      <div class="done-card impact-card">
+        <div class="impact-header">
+          <div class="impact-label">
+            <i data-lucide="sparkles"></i>
+            <span>Analyze Your Impact</span>
+          </div>
+          <p class="impact-subtitle">See how your personal story connects to the broader structural failure in Orlando.</p>
+        </div>
+
+        <div class="analysis-grid">
+          <button class="analysis-card" id="btn-narrative">
+            <div class="analysis-icon narrative">
+              <i data-lucide="book-open"></i>
+            </div>
+            <div class="analysis-copy">
+              <div class="analysis-title">The Narrative Mirror</div>
+              <p class="analysis-desc">Synthesize my answers into a cohesive, anonymous user story.</p>
             </div>
           </button>
-          <button class="card option" id="btn-systemic" style="text-align:left;">
-            <div class="option-icon" style="background:#f3e8ff;color:#7c3aed;"><i data-lucide="brain" style="width:18px;height:18px;"></i></div>
-            <div>
-              <div style="font-weight:800;color:#6b21a8;">Systemic Reality Check</div>
-              <div style="color:#7c3aed;font-size:13px;">Validate my struggle against Orlando economic data.</div>
+
+          <button class="analysis-card" id="btn-systemic">
+            <div class="analysis-icon systemic">
+              <i data-lucide="brain"></i>
+            </div>
+            <div class="analysis-copy">
+              <div class="analysis-title">Systemic Reality Check</div>
+              <p class="analysis-desc">Validate my struggle against Orlando economic data.</p>
             </div>
           </button>
         </div>
+
         ${state.isGenerating ? '<div class="center" style="color:var(--gray-500);"><div class="spinner"></div><div>Generating insight...</div></div>' : ''}
         ${state.aiNarrative && !state.isGenerating ? `<div class="ai-pane" style="border-color:#6366f1;">
           <strong style="color:#3730a3;text-transform:uppercase;letter-spacing:0.08em;font-size:12px;">Your Anonymous Narrative</strong>
@@ -434,7 +446,8 @@ const renderDone = () => {
           <div style="white-space:pre-wrap;">${state.aiAnalysis}</div>
         </div>` : ''}
       </div>
-      <button class="link" id="restart"><i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> Start a new response</button>
+
+      <button class="primary restart-button" id="restart"><i data-lucide="refresh-cw"></i> Start a new response</button>
     </div>
   `;
 
